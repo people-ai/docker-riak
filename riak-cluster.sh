@@ -39,6 +39,8 @@ for s in $PRESTART; do
   . $s
 done
 
+chown riak:riak /var/lib/riak
+
 # Start the node and wait until fully up
 $RIAK start
 $RIAK_ADMIN wait-for-service riak_kv

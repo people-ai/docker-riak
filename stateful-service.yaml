@@ -1,0 +1,48 @@
+apiVersion: "apps/v1beta1"
+kind: StatefulSet
+metadata:
+  name: riak-cluster
+spec:
+  serviceName: riak-cluster
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: riak-cluster
+    spec:
+      containers:
+      - name: riak-cluster
+        image: pyalex/riak-kv:0.2-2.2.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8087
+          name: pb
+        - containerPort: 8098
+          name: http
+        # resources:
+        #   limits:
+        #     cpu: "500m"
+        #     memory: 1Gi
+        #   requests:
+        #     cpu: "500m"
+        #     memory: 1Gi
+        securityContext:
+          capabilities:
+            add:
+              - IPC_LOCK
+        env:
+        - name: "WAIT_FOR_ERLANG"
+          value: "600"
+        volumeMounts:
+        - name: riak-cluster-data
+          mountPath: /var/lib/riak
+  volumeClaimTemplates:
+  - metadata:
+      name: riak-cluster-data
+      annotations:
+        volume.beta.kubernetes.io/storage-class: default
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 50Gi
