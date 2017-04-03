@@ -26,6 +26,11 @@ export HTTP_PORT=${HTTP_PORT:-8098}
 # Use ping to discover our HOSTNAME because it's easier and more reliable than other methods
 export HOST=$(ping -c1 $HOSTNAME | awk '/^PING/ {print $3}' | sed 's/[()]//g')||'127.0.0.1'
 
+# ulimit
+echo "* hard nofile 94000" >> /etc/security/limits.conf
+echo "* soft nofile 94000" >> /etc/security/limits.conf
+echo "session required pam_limits.so" >> /etc/pam.d/common-session
+
 # CLUSTER_NAME is used to name the nodes and is the value used in the distributed cookie
 export CLUSTER_NAME=${CLUSTER_NAME:-riak}
 
@@ -40,6 +45,7 @@ for s in $PRESTART; do
 done
 
 chown riak:riak /var/lib/riak
+! rm -rf /var/lib/riak/ring
 
 # Start the node and wait until fully up
 $RIAK start
@@ -48,7 +54,7 @@ $RIAK_ADMIN wait-for-service riak_kv
 # Run all poststart scripts
 POSTSTART=$(find /etc/riak/poststart.d -name *.sh -print | sort)
 for s in $POSTSTART; do
-  . $s
+  . $s || true
 done
 
 # Tail the log file indefinitely
