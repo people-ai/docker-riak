@@ -26,11 +26,11 @@ RUN apt-get install -y iproute iputils-ping
 # Install Docker for command-line utilities
 # RUN apt-get install -y docker
 
-ENV RIAK_VERSION 2.2.0
+ENV RIAK_VERSION 2.2.3
 ENV RIAK_FLAVOR KV
 ENV RIAK_HOME /usr/lib/riak
 RUN curl -s https://packagecloud.io/install/repositories/basho/riak/script.deb.sh | bash
-RUN apt-get install -y riak=2.2.0-1
+RUN apt-get install -y riak=2.2.3-1
 
 # Install Riak Explorer
 RUN curl -sSL https://github.com/basho-labs/riak_explorer/releases/download/1.4.1/riak_explorer-1.4.1.patch-ubuntu-14.04.tar.gz | tar -zxf - -C $RIAK_HOME --strip-components 2

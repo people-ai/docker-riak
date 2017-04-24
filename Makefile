@@ -1,6 +1,7 @@
 VERSION ?= $(shell cat .version)
+REGISTRY ?= pyalex
 
 build:
-	docker build -t pyalex/riak-kv:$(VERSION)-2.2.0 -f Dockerfile .
-	docker push pyalex/riak-kv:$(VERSION)-2.2.0
+	docker build -t $(REGISTRY)/riak-kv:$(VERSION)-2.2.3 -f Dockerfile .
+	docker push $(REGISTRY)/riak-kv:$(VERSION)-2.2.3
 

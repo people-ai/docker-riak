@@ -23,8 +23,9 @@ export SCHEMAS_DIR=/etc/riak/schemas/
 export PB_PORT=${PB_PORT:-8087}
 export HTTP_PORT=${HTTP_PORT:-8098}
 
-# Use ping to discover our HOSTNAME because it's easier and more reliable than other methods
-export HOST=$(ping -c1 $HOSTNAME | awk '/^PING/ {print $3}' | sed 's/[()]//g')||'127.0.0.1'
+export HOST=$(hostname --fqdn)||'127.0.0.1'
+export IP=$(ping -c1 $HOSTNAME | awk '/^PING/ {print $3}' | sed 's/[()]//g')||'127.0.0.1'
+
 
 # ulimit
 echo "* hard nofile 94000" >> /etc/security/limits.conf
@@ -36,7 +37,7 @@ export CLUSTER_NAME=${CLUSTER_NAME:-riak}
 
 # The COORDINATOR_NODE is the first node in a cluster to which other nodes will eventually join
 export COORDINATOR_NODE=${COORDINATOR_NODE:-$HOSTNAME}
-export COORDINATOR_NODE_HOST=$(ping -c1 $COORDINATOR_NODE | awk '/^PING/ {print $3}' | sed 's/[()]//g')||'127.0.0.1'
+export COORDINATOR_NODE_HOST="$COORDINATOR_NODE"
 
 # Run all prestart scripts
 PRESTART=$(find /etc/riak/prestart.d -name *.sh -print | sort)
