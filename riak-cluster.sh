@@ -46,7 +46,6 @@ for s in $PRESTART; do
 done
 
 chown riak:riak /var/lib/riak
-! rm -rf /var/lib/riak/ring
 
 # Start the node and wait until fully up
 $RIAK start
